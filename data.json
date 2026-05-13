@@ -1,0 +1,520 @@
+{
+  "products": [
+    {
+      "name": "gi\u00e0y adidas predator",
+      "price": 1500000,
+      "stock": 6,
+      "image_url": "https://i.ebayimg.com/images/g/GH0AAOSw2lBmnkKg/s-l800.jpg",
+      "categories": [
+        "football",
+        "giay"
+      ],
+      "reviews": [],
+      "id": 1,
+      "discount": 30,
+      "description": "abczxzy"
+    },
+    {
+      "name": "gi\u00e0y F50 304",
+      "price": 1700000,
+      "stock": 6,
+      "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxP2_gZctSp_GGubhp48uJSGVfx3t5cJD9cw&s",
+      "categories": [
+        "football",
+        "giay"
+      ],
+      "reviews": [
+        {
+          "name": "user1@gmail.com",
+          "rating": 3,
+          "comment": "gi\u00e0y \u0111i \u00eam",
+          "timestamp": "2025-07-03T11:52:49"
+        },
+        {
+          "name": "user1@gmail.com",
+          "rating": 5,
+          "comment": "s\u1ea3n ph\u1ea9m v\u1eeba v\u1eb7n, \u0111\u1ed9 ho\u00e0n thi\u1ec7n t\u1ed1t",
+          "timestamp": "2025-07-07T22:21:34"
+        }
+      ],
+      "id": 2,
+      "description": "Gi\u00e0y \u0111\u00e1 b\u00f3ng si\u00eau nh\u1eb9 gi\u00fap b\u1ea1n b\u1ee9t t\u1ed1c t\u1ed1i \u0111a tr\u00ean m\u1eb7t s\u00e2n c\u1ecf nh\u00e2n t\u1ea1o.\nKhai ph\u00e1 t\u1ed1c \u0111\u1ed9 \u0111\u1ec3 th\u1ec3 hi\u1ec7n tr\u1ecdn v\u1eb9n c\u00e1 t\u00ednh tr\u00ean s\u00e2n c\u1ecf. C\u1ea3m nh\u1eadn nh\u1ecbp \u0111\u1eadp t\u1ed1c \u0111\u1ed9 c\u00f9ng gi\u00e0y \u0111\u00e1 b\u00f3ng adidas F50 \u2013 sinh ra \u0111\u1ec3 d\u1eabn \u0111\u1ea7u m\u1ecdi cu\u1ed9c \u0111ua. Thu h\u00fat m\u1ecdi \u00e1nh nh\u00ecn v\u1edbi h\u1ecda ti\u1ebft Sprintgrid \u1ea5n t\u01b0\u1ee3ng, ph\u1ea7n th\u00e2n gi\u00e0y Fiberskin c\u1ee7a d\u00f2ng gi\u00e0y League t\u00edch h\u1ee3p l\u01b0\u1ee1i g\u00e0 Tunnel Tongue linh ho\u1ea1t, \u0111\u1ea3m b\u1ea3o \u0111\u1ed9 \u00f4m kh\u00edt v\u1eefng ch\u1eafc trong t\u1eebng pha b\u1ee9t t\u1ed1c. \u0110\u1ec7m gi\u1eefa EVA k\u1ebft h\u1ee3p c\u00f9ng \u0111\u1ebf ngo\u00e0i cao su c\u00f3 gai mang \u0111\u1ebfn s\u1ef1 \u00eam \u00e1i v\u00e0 b\u00e1m ch\u1eafc, gi\u00fap b\u1ea1n b\u1ee9t t\u1ed1c t\u1ef1 tin tr\u00ean m\u1eb7t s\u00e2n c\u1ecf nh\u00e2n t\u1ea1o.",
+      "discount": 0
+    },
+    {
+      "name": "gi\u00e0y PUMA ULTRA ULTIMATE",
+      "price": 1900000,
+      "stock": 4,
+      "image_url": "https://product.hstatic.net/200000278317/product/ng-futsal-giay-da-bong-puma-ultra-ultimate-cage-107502-04-vang-trang-1_798fc03340b34987ac13a87ad39c50dd_master.jpg",
+      "categories": [
+        "football",
+        "giay"
+      ],
+      "reviews": [],
+      "id": 3,
+      "discount": 0,
+      "description": ""
+    },
+    {
+      "name": "\u00c1o kho\u00e1c adidas Adicolor",
+      "price": 800000,
+      "stock": 12,
+      "image_url": "https://cdn.storims.com/api/v2/image/resize?path=https://storage.googleapis.com/storims_cdn/storims/uploads/1894952dcef46b47a924658edd96ada4.jpeg&format=jpeg",
+      "categories": [
+        "nu"
+      ],
+      "reviews": [
+        {
+          "name": "user1@gmail.com",
+          "rating": 5,
+          "comment": "ahahahahah",
+          "timestamp": "2025-07-08T03:26:45"
+        }
+      ],
+      "id": 4,
+      "discount": 0,
+      "description": ""
+    },
+    {
+      "name": "Balo Adidas Adicolor",
+      "price": 840000,
+      "stock": 8,
+      "image_url": "https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lmsjn3d5j3kvf2",
+      "categories": [
+        "balo"
+      ],
+      "reviews": [],
+      "id": 5,
+      "discount": 50,
+      "description": ""
+    },
+    {
+      "name": "Gi\u00e0y Ch\u1ea1y B\u1ed9 Nam Adidas Adizero Boston",
+      "price": 3200000,
+      "stock": 9,
+      "image_url": "https://supersports.com.vn/cdn/shop/files/JQ2552-1.jpg?v=1733818678&width=1000",
+      "categories": [
+        "running",
+        "nam",
+        "giay"
+      ],
+      "reviews": [],
+      "id": 6,
+      "description": "",
+      "discount": 0
+    }
+  ],
+  "orders": [
+    {
+      "items": [
+        {
+          "id": 8,
+          "name": "Gi\u00e0y \u0111\u00e1 b\u00f3ng F50 304",
+          "price": 1800000,
+          "quantity": 1
+        }
+      ],
+      "total": 1800000,
+      "id": 1
+    },
+    {
+      "items": [
+        {
+          "id": 8,
+          "name": "Gi\u00e0y \u0111\u00e1 b\u00f3ng F50 304",
+          "price": 1800000,
+          "quantity": 1
+        }
+      ],
+      "total": 1800000,
+      "id": 2
+    },
+    {
+      "items": [
+        {
+          "id": 8,
+          "name": "Gi\u00e0y \u0111\u00e1 b\u00f3ng F50 304",
+          "price": 1800000,
+          "quantity": 1
+        }
+      ],
+      "total": 1800000,
+      "id": 3
+    },
+    {
+      "items": [
+        {
+          "id": 8,
+          "name": "Gi\u00e0y \u0111\u00e1 b\u00f3ng F50 304",
+          "price": 1800000,
+          "quantity": 1
+        }
+      ],
+      "total": 1800000,
+      "id": 4
+    },
+    {
+      "items": [
+        {
+          "id": 8,
+          "name": "Gi\u00e0y \u0111\u00e1 b\u00f3ng F50 304",
+          "price": 1800000,
+          "quantity": 1
+        }
+      ],
+      "total": 1800000,
+      "id": 5
+    },
+    {
+      "items": [
+        {
+          "id": 8,
+          "name": "Gi\u00e0y \u0111\u00e1 b\u00f3ng F50 304",
+          "price": 1800000,
+          "quantity": 1
+        }
+      ],
+      "total": 1800000,
+      "id": 6
+    },
+    {
+      "items": [
+        {
+          "id": 2,
+          "name": "B\u00f3ng r\u1ed5 Spalding",
+          "price": 1200000,
+          "quantity": 1
+        }
+      ],
+      "total": 1200000,
+      "id": 7,
+      "created_at": "2025-05-18T16:33:55.981471"
+    },
+    {
+      "items": [
+        {
+          "id": 5,
+          "name": "\u00c1o th\u1ec3 thao Nike Pro",
+          "price": 950000,
+          "quantity": 1
+        }
+      ],
+      "total": 950000,
+      "id": 8,
+      "created_at": "2025-05-18T16:34:40.414202"
+    },
+    {
+      "customer": "admin@sportstore.com",
+      "created_at": "2025-05-18T16:44:52.223654",
+      "items": [
+        {
+          "id": 5,
+          "name": "\u00c1o th\u1ec3 thao Nike Pro",
+          "price": 950000,
+          "quantity": 1
+        }
+      ],
+      "total": 950000,
+      "id": 9
+    },
+    {
+      "customer": "admin@sportstore.com",
+      "created_at": "2025-05-30T21:59:54.660607",
+      "items": [
+        {
+          "id": 8,
+          "name": "Gi\u00e0y \u0111\u00e1 b\u00f3ng F50 304",
+          "price": 1800000,
+          "quantity": 1
+        }
+      ],
+      "total": 1800000,
+      "id": 10
+    },
+    {
+      "customer": "user1@gmail.com",
+      "created_at": "2025-05-30T22:02:26.379699",
+      "items": [
+        {
+          "id": 3,
+          "name": "gi\u00e0y PUMA ULTRA ULTIMATE",
+          "price": 1900000,
+          "quantity": 1
+        }
+      ],
+      "total": 1900000,
+      "id": 11
+    },
+    {
+      "customer": "admin@sportstore.com",
+      "created_at": "2025-06-02T10:26:58.418141",
+      "items": [
+        {
+          "id": 2,
+          "name": "gi\u00e0y F50 304",
+          "price": 1700000,
+          "quantity": 1
+        }
+      ],
+      "total": 1700000,
+      "id": 12
+    },
+    {
+      "customerEmail": "admin@sportstore.com",
+      "customerName": "Tr\u1ea7n Quang Huy",
+      "customerPhone": "0865306456",
+      "customerAddress": "H\u00e0 \u0111\u00f4ng - H\u00e0 N\u1ed9i",
+      "note": "kh\u00f4ng c\u00f3",
+      "paymentMethod": "cod",
+      "items": [
+        {
+          "id": 3,
+          "name": "gi\u00e0y PUMA ULTRA ULTIMATE",
+          "price": 1900000,
+          "quantity": 1
+        }
+      ],
+      "subtotal": 1900000,
+      "shippingFee": 30000,
+      "total": 1930000,
+      "created_at": "2025-06-03T07:24:28.387Z",
+      "id": 13
+    },
+    {
+      "customer": "admin@sportstore.com",
+      "created_at": "2025-06-03T07:26:55.564Z",
+      "items": [
+        {
+          "id": 5,
+          "name": "Balo Adidas Adicolor",
+          "price": 840000,
+          "quantity": 1
+        }
+      ],
+      "total": 840000,
+      "id": 14,
+      "shippingFee": 30000
+    },
+    {
+      "customer": "user1@gmail.com",
+      "created_at": "2025-06-03T07:30:01.089Z",
+      "items": [
+        {
+          "categories": [
+            "balo"
+          ],
+          "id": 5,
+          "image_url": "https://down-vn.img.susercontent.com/file/vn-11134201-7r98o-lmsjn3d5j3kvf2",
+          "name": "Balo Adidas Adicolor",
+          "price": 840000,
+          "stock": 8,
+          "quantity": 1
+        }
+      ],
+      "total": 840000,
+      "id": 15,
+      "shippingFee": 30000
+    },
+    {
+      "customerEmail": "user1@gmail.com",
+      "customerName": "Tr\u1ea7n Quang Huy",
+      "customerPhone": "0865306456",
+      "customerAddress": "h\u00e0 \u0111\u00f4ng h\u00e0 \u0111\u00f4ng h\u00e0 \u0111\u00f4ng h\u00e0 n\u1ed9i",
+      "note": "",
+      "paymentMethod": "cod",
+      "items": [
+        {
+          "id": 4,
+          "name": "\u00c1o kho\u00e1c adidas Adicolor",
+          "price": 800000,
+          "quantity": 1
+        }
+      ],
+      "subtotal": 800000,
+      "shippingFee": 30000,
+      "total": 830000,
+      "created_at": "2025-06-03T07:31:16.174Z",
+      "id": 16
+    },
+    {
+      "customer": "admin@sportstore.com",
+      "created_at": "2025-06-03T10:17:16.227Z",
+      "items": [
+        {
+          "id": 2,
+          "name": "gi\u00e0y F50 304",
+          "price": 1700000,
+          "size": "40",
+          "quantity": 1,
+          "image_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxP2_gZctSp_GGubhp48uJSGVfx3t5cJD9cw&s"
+        }
+      ],
+      "total": 1700000,
+      "id": 17,
+      "shippingFee": 30000
+    },
+    {
+      "customerEmail": "admin@sportstore.com",
+      "customerName": "Tr\u1ea7n Quang Huy",
+      "customerPhone": "0865306456",
+      "customerAddress": "H\u00e0 \u0111\u00f4ng - H\u00e0 N\u1ed9i",
+      "note": "",
+      "paymentMethod": "cod",
+      "items": [
+        {
+          "id": 2,
+          "name": "gi\u00e0y F50 304",
+          "price": 1700000,
+          "size": "38",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 1700000,
+      "shippingFee": 30000,
+      "total": 1730000,
+      "created_at": "2025-06-06T11:55:14.064Z",
+      "id": 18
+    },
+    {
+      "customerEmail": "admin@sportstore.com",
+      "customerName": "Tr\u1ea7n Quang Huy",
+      "customerPhone": "0865306456",
+      "customerAddress": "H\u00e0 \u0111\u00f4ng - H\u00e0 N\u1ed9i",
+      "note": "",
+      "paymentMethod": "cod",
+      "items": [
+        {
+          "id": 2,
+          "name": "gi\u00e0y F50 304",
+          "price": 1700000,
+          "size": "38",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 1700000,
+      "shippingFee": 30000,
+      "total": 1730000,
+      "created_at": "2025-06-06T11:59:43.406Z",
+      "id": 19
+    },
+    {
+      "customerEmail": "user1@gmail.com",
+      "customerName": "tr\u1ea7n quang huy",
+      "customerPhone": "0865306456",
+      "customerAddress": "H\u00e0 \u0111\u00f4ng - H\u00e0 N\u1ed9i",
+      "note": "",
+      "paymentMethod": "cod",
+      "items": [
+        {
+          "id": 2,
+          "name": "gi\u00e0y F50 304",
+          "price": 1700000,
+          "size": "38",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 1700000,
+      "shippingFee": 30000,
+      "total": 1730000,
+      "created_at": "2025-06-06T12:25:36.467Z",
+      "id": 20
+    },
+    {
+      "customerEmail": "user1@gmail.com",
+      "customerName": "tr\u1ea7n quang huy",
+      "customerPhone": "0865306456",
+      "customerAddress": "H\u00e0 \u0111\u00f4ng - H\u00e0 N\u1ed9i",
+      "note": "",
+      "paymentMethod": "cod",
+      "items": [
+        {
+          "id": 2,
+          "name": "gi\u00e0y F50 304",
+          "price": 1700000,
+          "size": "38",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 1700000,
+      "shippingFee": 30000,
+      "total": 1730000,
+      "created_at": "2025-06-06T13:44:05.260Z",
+      "id": 21
+    },
+    {
+      "customerEmail": "user1@gmail.com",
+      "customerName": "tr\u1ea7n quang huy",
+      "customerPhone": "0865306456",
+      "customerAddress": "H\u00e0 \u0111\u00f4ng - H\u00e0 N\u1ed9i",
+      "note": "",
+      "paymentMethod": "online",
+      "items": [
+        {
+          "id": 2,
+          "name": "gi\u00e0y F50 304",
+          "price": 1700000,
+          "size": "38",
+          "quantity": 1
+        },
+        {
+          "id": 6,
+          "name": "Gi\u00e0y Ch\u1ea1y B\u1ed9 Nam Adidas Adizero Boston",
+          "price": 3200000,
+          "size": "38",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 4900000,
+      "shippingFee": 30000,
+      "total": 4930000,
+      "created_at": "2025-06-11T10:13:34.711Z",
+      "paypalOrderId": "65716721U9717623K",
+      "id": 22
+    },
+    {
+      "customerEmail": "user1@gmail.com",
+      "customerName": "tr\u1ea7n quang huy",
+      "customerPhone": "0865306456",
+      "customerAddress": "H\u00e0 \u0111\u00f4ng - H\u00e0 N\u1ed9i",
+      "note": "",
+      "paymentMethod": "cod",
+      "items": [
+        {
+          "id": 4,
+          "name": "\u00c1o kho\u00e1c adidas Adicolor",
+          "price": 800000,
+          "size": "S",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 800000,
+      "shippingFee": 30000,
+      "total": 830000,
+      "created_at": "2025-07-03T12:19:10.388Z",
+      "id": 23
+    },
+    {
+      "customerEmail": "user1@gmail.com",
+      "customerName": "tr\u1ea7n quang huy",
+      "customerPhone": "0865306456",
+      "customerAddress": "H\u00e0 \u0111\u00f4ng - H\u00e0 N\u1ed9i",
+      "note": "abc",
+      "paymentMethod": "online",
+      "items": [
+        {
+          "id": 2,
+          "name": "gi\u00e0y F50 304",
+          "price": 1700000,
+          "size": "38",
+          "quantity": 1
+        }
+      ],
+      "subtotal": 1700000,
+      "shippingFee": 30000,
+      "total": 1730000,
+      "created_at": "2025-07-08T03:25:44.463Z",
+      "paypalOrderId": "8KY2543321470674S",
+      "id": 24
+    }
+  ]
+}
