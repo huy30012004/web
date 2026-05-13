@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chi tiết đơn hàng</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- load CSS, giữ nguyên <i> và class để JS của bạn toggle -->
+<link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+  integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer"
+/>
+
+  <style>
+    .star.text-yellow-400 { color: #f6c23e; }
+    .star.text-gray-300  { color: #d1d5db; }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans">
+  <div class="container mx-auto px-4 py-8">
+    <button onclick="history.back()"
+            class="mb-6 text-blue-600 hover:underline">&larr; Quay lại</button>
+
+    <div id="orderDetailContainer" class="bg-white rounded-lg shadow p-6">
+      <p class="text-gray-500">Đang tải chi tiết đơn hàng…</p>
+    </div>
+  </div>
+
+  <script>
+    console.log('🔰 order-detail.js bắt đầu tải'); 
+
+    const apiBase = 'http://localhost:5000/api';
+
+    function getOrderIdFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id');
+    }
+
+    async function loadOrderDetail() {
+      console.log('▶ loadOrderDetail() gọi');
+      const id = getOrderIdFromURL();
+      const container = document.getElementById('orderDetailContainer');
+      if (!id) {
+        container.innerHTML = '<p class="text-red-500">Không xác định được ID đơn hàng.</p>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${apiBase}/orders/${id}`);
+        if (!res.ok) throw new Error('Không lấy được chi tiết đơn.');
+        const o = await res.json();
+
+        let html = `
+          <h1 class="text-2xl font-bold mb-4">Chi tiết đơn #${o.id}</h1>
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2">Thông tin khách hàng</h2>
+            <p><span class="font-medium">Email:</span> ${o.customer || o.customerEmail || '-'}</p>
+            ${o.customerName? `<p><span class="font-medium">Họ tên:</span> ${o.customerName}</p>`: ''}
+            ${o.customerPhone? `<p><span class="font-medium">SĐT:</span> ${o.customerPhone}</p>`: ''}
+            ${o.customerAddress? `<p><span class="font-medium">Địa chỉ:</span> ${o.customerAddress}</p>`: ''}
+            ${o.note? `<p><span class="font-medium">Ghi chú:</span> ${o.note}</p>`: ''}
+            <p><span class="font-medium">Thời gian đặt:</span> ${new Date(o.created_at).toLocaleString('vi-VN')}</p>
+          </div>
+
+          <div class="mb-6">
+            <h2 class="text-xl font-semibold mb-2">Sản phẩm đã đặt</h2>
+            <table class="min-w-full table-auto border-collapse">
+              <thead class="bg-gray-200">
+                <tr>
+                  <th class="px-4 py-2 border">Tên SP</th>
+                  <th class="px-4 py-2 border">Giá (đ/1)</th>
+                  <th class="px-4 py-2 border">Size</th>
+                  <th class="px-4 py-2 border">Số lượng</th>
+                  <th class="px-4 py-2 border">Thành tiền</th>
+                  <th class="px-4 py-2 border">Đánh giá</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+
+        // Vòng lặp cho từng item
+        o.items.forEach(item => {
+          const price   = Number(item.price).toLocaleString();
+          const lineTot = Number(item.price * item.quantity).toLocaleString();
+         html += `
+            <tr>
+              <td class="px-4 py-2 border">${item.name}</td>
+              <td class="px-4 py-2 border">${price}đ</td>
+              <td class="px-4 py-2 border">${item.size||'-'}</td>
+              <td class="px-4 py-2 border">${item.quantity}</td>
+              <td class="px-4 py-2 border">${lineTot}đ</td>
+              <td class="px-4 py-2 border text-center">
+  <!-- Khung sao (bắt đầu với outline star) -->
+  <div class="rating flex justify-center space-x-1"
+       data-order-id="${o.id}"
+       data-product-id="${item.id}"
+       data-customer="${(o.customer||o.customerEmail||'').toLowerCase()}">
+    ${[1,2,3,4,5].map(i =>
+      `<i class="far fa-star star cursor-pointer text-gray-300" data-value="${i}"></i>`
+    ).join('')}
+  </div>
+
+  <!-- Form comment (ẩn) -->
+  <form class="review-form hidden mt-2 space-y-1">
+    <textarea class="comment w-full border rounded p-1"
+              placeholder="Viết nhận xét…"></textarea>
+    <button type="button"
+            class="btn-submit-review bg-blue-600 text-white px-3 py-1 rounded">
+      Gửi
+    </button>
+  </form>
+</td>
+
+
+
+            </tr>
+          `;
+
+        });
+
+        html += `
+              </tbody>
+            </table>
+          </div>
+
+          <div class="text-right font-medium text-lg">
+            <p>Subtotal: ${Number(o.subtotal||o.total).toLocaleString()}đ</p>
+            ${o.shippingFee!=null? `<p>Phí vận chuyển: ${Number(o.shippingFee).toLocaleString()}đ</p>`: ''}
+            <p class="mt-2">Tổng cộng: <span class="text-red-600">${Number(o.total).toLocaleString()}đ</span></p>
+          </div>
+        `;
+
+        container.innerHTML = html;
+
+        // Sau khi render xong, khởi tạo sự kiện cho phần đánh giá
+        initDetailRatings();
+
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p class="text-red-500">Lỗi khi tải chi tiết đơn.</p>';
+      }
+    }
+
+function highlightStars(rEl, rating) {
+    rEl.querySelectorAll('.star').forEach(s => {
+      const v = +s.dataset.value;
+      s.classList.toggle('fas', v <= rating);
+      s.classList.toggle('far', v >  rating);
+      s.classList.toggle('text-yellow-400', v <= rating);
+      s.classList.toggle('text-gray-300',  v >  rating);
+    });
+  }
+
+  function initDetailRatings() {
+    console.log('▶ initDetailRatings() gọi – tìm thấy', 
+              document.querySelectorAll('.rating').length, 
+              'rating box');
+    document.querySelectorAll('.rating').forEach(rEl => {
+      const orderId   = rEl.dataset.orderId;
+      const productId = rEl.dataset.productId;
+      const email     = rEl.dataset.customer;
+      const formEl    = rEl.nextElementSibling;
+      const stars     = Array.from(rEl.querySelectorAll('.star'));
+
+      // 1) Kiểm tra xem đã đánh giá chưa
+      fetch(`${apiBase}/products/${productId}/reviews`)
+        .then(r => r.json())
+        .then(data => {
+          const entry = (data.reviews||[]).find(r => r.name.toLowerCase() === email);
+          if (entry) {
+            highlightStars(rEl, entry.rating);
+            formEl.classList.add('hidden');
+          }
+        }).catch(()=>{});
+
+      // 2) Click sao → highlight + show form
+      stars.forEach(star => {
+        star.addEventListener('click', () => {
+          const v = +star.dataset.value;
+          highlightStars(rEl, v);
+          formEl.classList.remove('hidden');
+          formEl.querySelector('.comment').focus();
+        });
+      });
+
+      // 3) Gửi đánh giá
+      formEl.querySelector('.btn-submit-review')
+        .addEventListener('click', async () => {
+          const v       = stars.filter(s => s.classList.contains('fas')).length;
+          const comment = formEl.querySelector('.comment').value.trim();
+          if (!v) return alert('Chọn số sao trước!');
+          try {
+            const res = await fetch(`${apiBase}/products/${productId}/reviews`, {
+              method: 'POST',
+              headers: { 'Content-Type':'application/json' },
+              body: JSON.stringify({ email, rating: v, comment })
+            });
+            const body = await res.json();
+            if (!res.ok) throw new Error(body.error||JSON.stringify(body));
+            alert('Cảm ơn bạn đã đánh giá!');
+            formEl.classList.add('hidden');
+          } catch(e) {
+            console.error(e);
+            alert('Lỗi: ' + e.message);
+          }
+        });
+    });
+  }
+
+    document.addEventListener('DOMContentLoaded', loadOrderDetail);
+  </script>
+</body>
+</html>

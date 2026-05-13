@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Xem trạng thái đơn</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <style>
+    body { font-family: 'Montserrat', sans-serif; background-color: #f0f2f5; }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+    th, td {
+      padding: 12px 8px;
+      border: 1px solid #e2e8f0;
+      text-align: left;
+    }
+    th {
+      background-color: #f7fafc;
+    }
+    .status-processing { color: #e67e22; font-weight: bold; }
+    .status-shipped    { color: #3498db; font-weight: bold; }
+    .status-completed  { color: #2ecc71; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-2xl font-bold mb-4">Trạng thái đơn hàng hiện tại</h2>
+    <div id="ordersContainer">
+      <p class="text-gray-500">Đang tải đơn hàng…</p>
+    </div>
+  </div>
+
+  <!-- Firebase App + Auth-compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script>
+    // ==== 1) Cấu hình Firebase giống index.html ====
+    const firebaseConfig = {
+      apiKey: "AIzaSyAvpSFwsF7ZSAiTR5UFZ-BOroOkla2SvUg",
+      authDomain: "sport-store-user.firebaseapp.com",
+      projectId: "sport-store-user",
+      storageBucket: "sport-store-user.firebasestorage.app",
+      messagingSenderId: "642253971023",
+      appId: "1:642253971023:web:df7d6e0ea36d61f5af543a",
+      measurementId: "G-QQ3J0X0Z0V"
+    };
+    firebase.initializeApp(firebaseConfig, "userApp");
+    const auth = firebase.auth(firebase.app("userApp"));
+
+    // ==== 2) Nếu user chưa login, redirect về login.html ====
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        // Nếu đã login, gọi hàm lấy đơn hàng
+        loadCurrentOrders(user.email);
+      }
+    });
+
+    // ==== 3) Hàm fetch & hiển thị đơn hàng chưa hoàn thành ====
+    async function loadCurrentOrders(email) {
+      const container = document.getElementById("ordersContainer");
+      container.innerHTML = '<p class="text-gray-500">Đang tải đơn hàng…</p>';
+
+      try {
+        const res = await fetch("http://localhost:5000/api/orders");
+        if (!res.ok) throw new Error("Không lấy được đơn hàng từ server");
+        const data = await res.json();
+        const orders = data.orders || [];
+
+        // Lọc ra những đơn dành cho user: order.customer === email
+        // Và chỉ lấy những đơn “chưa hoàn thành”  (status !== "completed")
+        const current = orders.filter(o =>
+          o.customer.toLowerCase() === email.toLowerCase() &&
+          o.status !== "completed"
+        );
+
+        if (!current.length) {
+          container.innerHTML = '<p class="text-gray-500">Không có đơn hàng đang xử lý.</p>';
+          return;
+        }
+
+        // Tạo bảng hiển thị
+        let html = `
+          <table>
+            <thead>
+              <tr>
+                <th>Mã Đơn</th>
+                <th>Ngày Đặt</th>
+                <th>Tổng Tiền</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        current.forEach(o => {
+          // Format ngày giờ từ ISO → dd/mm/yyyy HH:MM
+          const dt = new Date(o.timestamp);
+          const formatted = dt.toLocaleString("vi-VN");
+
+          // Gán class màu cho từng status
+          let cls = "";
+          if (o.status === "processing") cls = "status-processing";
+          else if (o.status === "shipped") cls = "status-shipped";
+          else if (o.status === "completed") cls = "status-completed";
+
+          html += `
+            <tr>
+              <td>#${o.id}</td>
+              <td>${formatted}</td>
+              <td>${Number(o.total).toLocaleString("vi-VN")}đ</td>
+              <td class="${cls}">${o.status}</td>
+            </tr>
+          `;
+        });
+        html += `
+            </tbody>
+          </table>
+        `;
+        container.innerHTML = html;
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = `<p class="text-red-500">Lỗi khi tải đơn hàng: ${err.message}</p>`;
+      }
+    }
+  </script>
+</body>
+</html>

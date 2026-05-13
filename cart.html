@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Giỏ hàng</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <!-- Tạm ẩn PayPal SDK nếu bạn không muốn hiển thị nút PayPal ở đây -->
+  <!-- <script src="https://www.paypal.com/sdk/js?client-id=AaTT4LUw73wcCZNL6Jt4f3kHU6CrMqf5wuL99VXR4CMjfq9qp-u86CFUT8SpSunpFKUl86Ak476gR8Jr&currency=USD"></script> -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>body { font-family: 'Montserrat', sans-serif; }</style>
+</head>
+<body class="bg-gray-100">
+
+  <!-- Auth Page -->
+  <div id="auth-page" class="flex items-center justify-center h-screen">
+    <div class="bg-white p-8 rounded shadow-md w-full max-w-sm">
+      <h2 class="text-2xl font-bold mb-6 text-center">Đăng nhập / Đăng ký</h2>
+      <input id="email" type="email" placeholder="Email" class="w-full mb-3 p-2 border rounded" />
+      <input id="password" type="password" placeholder="Mật khẩu" class="w-full mb-4 p-2 border rounded" />
+      <div class="flex space-x-4">
+        <button id="btn-register" class="flex-1 bg-green-600 text-white p-2 rounded">Đăng ký</button>
+        <button id="btn-login" class="flex-1 bg-blue-600 text-white p-2 rounded">Đăng nhập</button>
+      </div>
+      <p id="auth-error" class="mt-2 text-red-500 text-sm hidden"></p>
+    </div>
+  </div>
+
+  <!-- Cart Page -->
+  <div id="cart-page" class="hidden">
+    <header class="bg-white shadow-md">
+      <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold text-gray-800">SPORT STORE</h1>
+        <div class="flex items-center space-x-4">
+          <button id="btn-logout" class="text-gray-800 hover:text-blue-600">Đăng xuất</button>
+          <a href="index.html" class="text-blue-600 hover:underline">Trang chủ</a>
+          <a href="#" class="relative text-gray-800 hover:text-blue-600">
+            <i class="fas fa-shopping-cart text-xl"></i>
+            <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-10">
+      <h2 class="text-3xl font-bold mb-6">Giỏ hàng của bạn</h2>
+      <div id="cart-container" class="space-y-6"></div>
+      <div class="mt-8 text-right">
+        <p class="text-xl font-semibold">Tổng tiền: <span id="total-price" class="text-red-500">0đ</span></p>
+        <!-- Bỏ phần PayPal Button nếu chỉ cần COD/Bank chuyển khoản -->
+        <!-- <div id="paypal-button-container" class="my-4"></div> -->
+        <!-- Nút chuyển sang checkout.html để điền thông tin -->
+        <button id="checkout-btn" class="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+          Tiến hành đặt hàng
+        </button>
+      </div>
+    </main>
+  </div>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script>
+    // ========== 1. Khởi tạo Firebase Auth ==========
+    const firebaseConfig = {
+  apiKey: "AIzaSyAvpSFwsF7ZSAiTR5UFZ-BOroOkla2SvUg",
+  authDomain: "sport-store-user.firebaseapp.com",
+  projectId: "sport-store-user",
+  storageBucket: "sport-store-user.firebasestorage.app",
+  messagingSenderId: "642253971023",
+  appId: "1:642253971023:web:df7d6e0ea36d61f5af543a",
+  measurementId: "G-QQ3J0X0Z0V"
+};
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const authPage = document.getElementById('auth-page');
+      const cartPage = document.getElementById('cart-page');
+      const emailInput = document.getElementById('email');
+      const passInput = document.getElementById('password');
+      const btnRegister = document.getElementById('btn-register');
+      const btnLogin = document.getElementById('btn-login');
+      const btnLogout = document.getElementById('btn-logout');
+      const authError = document.getElementById('auth-error');
+
+      // Khi trạng thái auth thay đổi
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          // Đã đăng nhập: hiển thị trang giỏ hàng
+          authPage.classList.add('hidden');
+          cartPage.classList.remove('hidden');
+          initializeCart(user);
+        } else {
+          // Chưa đăng nhập: chuyển về form đăng nhập
+          cartPage.classList.add('hidden');
+          authPage.classList.remove('hidden');
+        }
+      });
+
+      // Đăng ký
+      btnRegister.addEventListener('click', () => {
+        const email = emailInput.value.trim();
+        const password = passInput.value.trim();
+        if (!email || !password) {
+          authError.textContent = "Vui lòng nhập email và mật khẩu.";
+          authError.classList.remove('hidden');
+          return;
+        }
+        auth.createUserWithEmailAndPassword(email, password)
+          .then(() => authError.classList.add('hidden'))
+          .catch(err => {
+            authError.textContent = err.message;
+            authError.classList.remove('hidden');
+          });
+      });
+
+      // Đăng nhập
+      btnLogin.addEventListener('click', () => {
+        const email = emailInput.value.trim();
+        const password = passInput.value.trim();
+        if (!email || !password) {
+          authError.textContent = "Vui lòng nhập email và mật khẩu.";
+          authError.classList.remove('hidden');
+          return;
+        }
+        auth.signInWithEmailAndPassword(email, password)
+          .then(() => authError.classList.add('hidden'))
+          .catch(err => {
+            authError.textContent = err.message;
+            authError.classList.remove('hidden');
+          });
+      });
+
+      // Đăng xuất
+      btnLogout.addEventListener('click', () => auth.signOut());
+
+      // ========== 2. Khởi tạo và render Giỏ hàng ==========
+      function initializeCart(user) {
+        // Lấy cart từ localStorage
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const formatCurrency = v => v.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+
+        // Cập nhật badge số lượng lên icon
+        function updateCartCount() {
+          const count = cart.reduce((s, i) => s + i.quantity, 0);
+          document.getElementById('cart-count').textContent = count;
+        }
+
+        // Render từng item trong Giỏ
+        function renderCart() {
+          const container = document.getElementById('cart-container');
+          container.innerHTML = '';
+          let total = 0;
+
+          cart.forEach((item, i) => {
+            total += item.price * item.quantity;
+
+            // Tạo wrapper cho mỗi dòng
+            const div = document.createElement('div');
+            div.className = 'bg-white p-4 rounded shadow-md flex flex-col md:flex-row md:items-center';
+
+            // 1) Ảnh (nếu có)
+            const imgDiv = document.createElement('div');
+            imgDiv.className = 'md:w-1/4';
+            imgDiv.innerHTML = `
+              <img src="${item.image_url}" alt="${item.name}" class="w-full h-40 object-cover rounded" />
+            `;
+            div.appendChild(imgDiv);
+
+            // 2) Thông tin & Controls
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'md:w-3/4 flex flex-col md:flex-row justify-between items-start md:items-center md:ml-6';
+
+            // 2.1) Thông tin: tên, size, đơn giá, subtotal
+            const leftInfo = document.createElement('div');
+            leftInfo.className = 'flex-1';
+            leftInfo.innerHTML = `
+              <h3 class="text-lg font-semibold text-gray-700">${item.name}</h3>
+              <p class="text-sm text-gray-500 mt-1">Size: <span class="font-medium text-gray-800">${item.size}</span></p>
+              <p class="text-sm text-gray-500 mt-1">Đơn giá: ${formatCurrency(item.price)}</p>
+              <p class="text-red-500 font-bold mt-1">Subtotal: ${formatCurrency(item.price * item.quantity)}</p>
+            `;
+            infoDiv.appendChild(leftInfo);
+
+            // 2.2) Controls: nút –, số lượng, nút +, nút × (xóa)
+            const rightControls = document.createElement('div');
+            rightControls.className = 'flex flex-col items-end space-y-2';
+
+            // Nút – (giảm số lượng)
+            const btnDecrease = document.createElement('button');
+            btnDecrease.className = 'bg-gray-200 px-2 rounded';
+            btnDecrease.innerText = '–';
+            btnDecrease.addEventListener('click', () => {
+              if (item.quantity > 1) {
+                item.quantity--;
+              } else {
+                cart.splice(i, 1);
+              }
+              localStorage.setItem('cart', JSON.stringify(cart));
+              renderCart();
+              updateCartCount();
+            });
+
+            // Hiển thị số lượng
+            const qtySpan = document.createElement('span');
+            qtySpan.className = 'mx-2';
+            qtySpan.innerText = item.quantity;
+
+            // Nút + (tăng số lượng)
+            const btnIncrease = document.createElement('button');
+            btnIncrease.className = 'bg-gray-200 px-2 rounded';
+            btnIncrease.innerText = '+';
+            btnIncrease.addEventListener('click', () => {
+              item.quantity++;
+              localStorage.setItem('cart', JSON.stringify(cart));
+              renderCart();
+              updateCartCount();
+            });
+
+            // Nút × (xóa sản phẩm)
+            const btnDelete = document.createElement('button');
+            btnDelete.className = 'text-gray-500 hover:text-red-600 text-xl';
+            btnDelete.innerHTML = '&times;';
+            btnDelete.addEventListener('click', () => {
+              cart.splice(i, 1);
+              localStorage.setItem('cart', JSON.stringify(cart));
+              renderCart();
+              updateCartCount();
+            });
+
+            rightControls.appendChild(btnDecrease);
+            rightControls.appendChild(qtySpan);
+            rightControls.appendChild(btnIncrease);
+            rightControls.appendChild(btnDelete);
+            infoDiv.appendChild(rightControls);
+
+            div.appendChild(infoDiv);
+            container.appendChild(div);
+          });
+
+          document.getElementById('total-price').textContent = formatCurrency(total);
+        }
+
+        // Khi bấm “Tiến hành đặt hàng” → chuyển sang checkout.html (không gọi API tại đây)
+        document.getElementById('checkout-btn').addEventListener('click', () => {
+          // Nếu giỏ hàng trống, báo lỗi
+          if (!cart.length) {
+            alert('Giỏ hàng đang trống.');
+            return;
+          }
+          // Chuyển sang checkout.html để điền thông tin giao hàng
+          window.location.href = 'checkout.html';
+        });
+
+        // Khởi tạo render lần đầu
+        renderCart();
+        updateCartCount();
+      }
+    });
+  </script>
+</body>
+</html>

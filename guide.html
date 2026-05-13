@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hướng dẫn mua hàng – SPORT STORE</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>body { font-family: 'Montserrat', sans-serif; overflow-x: hidden; }</style>
+</head>
+
+<body class="bg-gray-100">
+  <!-- Header chung -->
+  <header class="bg-white shadow sticky top-0 z-50">
+    <div class="container mx-auto flex items-center justify-between p-4">
+      <div class="flex items-center space-x-4">
+        <i class="fas fa-running text-2xl text-blue-600"></i>
+        <a href="index.html" class="text-xl font-bold text-gray-800">SPORT STORE</a>
+        <nav class="relative">
+          <ul class="flex space-x-6">
+            <li><a href="index.html" class="hover:text-blue-600 transition">Trang chủ</a></li>
+            <li><a href="about.html" class="hover:text-blue-600 transition">Giới thiệu</a></li>
+            <li><a href="news.html" class="hover:text-blue-600 transition">Tin tức</a></li>
+            <li><a href="contact.html" class="hover:text-blue-600 transition">Liên hệ</a></li>
+            <li><a href="guide.html" class="text-blue-600 font-medium">Hướng dẫn mua hàng</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="cart.html" class="relative text-gray-800 hover:text-blue-600">
+          <i class="fas fa-shopping-cart text-xl"></i>
+          <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main content: Hướng dẫn mua hàng -->
+  <main class="container mx-auto px-4 py-10 space-y-6">
+    <h1 class="text-3xl font-bold mb-6">Hướng dẫn mua hàng</h1>
+
+    <section>
+      <h2 class="text-2xl font-semibold mb-2">1. Chọn sản phẩm</h2>
+      <p class="mb-4">
+        Tại trang chủ hoặc danh mục, bạn có thể duyệt qua các sản phẩm giày, quần áo, phụ kiện. Nhấn nút “Thêm vào giỏ” để cho sản phẩm vào giỏ hàng.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold mb-2">2. Xem giỏ hàng</h2>
+      <p class="mb-4">
+        Nhấp vào biểu tượng cart (giỏ hàng) ở góc trên bên phải để xem lại danh sách sản phẩm bạn đã chọn. Tại đây bạn có thể thay đổi số lượng hoặc xoá sản phẩm.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold mb-2">3. Thanh toán</h2>
+      <p class="mb-4">
+        Sau khi kiểm tra thông tin giỏ hàng, bấm “Tiến hành đặt hàng”. Tại trang thanh toán, bạn điền đầy đủ thông tin giao hàng và chọn phương thức thanh toán (COD hoặc Paypal). 
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold mb-2">4. Xác nhận đơn hàng</h2>
+      <p class="mb-4">
+        Khi bạn bấm “Đặt hàng”, hệ thống sẽ gửi đơn đến admin. Bạn sẽ nhận được thông tin xác nhận qua email hoặc tin nhắn (nếu có đăng ký).
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-2xl font-semibold mb-2">5. Giao hàng</h2>
+      <p class="mb-4">
+        Đơn hàng sẽ được xử lý và giao nhanh trong vòng 1–3 ngày làm việc (tùy theo khu vực). Bạn có thể theo dõi trạng thái đơn hàng thông qua email hoặc số điện thoại.
+      </p>
+    </section>
+  </main>
+
+  <!-- Footer chung -->
+  <footer class="bg-gray-800 text-gray-200 py-10">
+    <div class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+      <div>
+        <h4 class="font-semibold mb-2">Về SPORT STORE</h4>
+        <ul class="space-y-1">
+          <li><a href="about.html" class="hover:text-white">Giới thiệu</a></li>
+          <li><a href="news.html" class="hover:text-white">Tin tức</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-2">Hỗ trợ</h4>
+        <ul class="space-y-1">
+          <li><a href="contact.html" class="hover:text-white">Liên hệ</a></li>
+          <li><a href="guide.html" class="hover:text-white">Hướng dẫn mua hàng</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-2">Chính sách</h4>
+        <ul class="space-y-1">
+          <li><a href="returns.html" class="hover:text-white">Đổi trả</a></li>
+          <li><a href="privacy.html" class="hover:text-white">Bảo mật</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-2">Kết nối với chúng tôi</h4>
+        <div class="flex space-x-3">
+          <a href="https://facebook.com/YourPage" target="_blank" class="hover:text-white"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://instagram.com/YourProfile" target="_blank" class="hover:text-white"><i class="fab fa-instagram"></i></a>
+          <a href="https://youtube.com/YourChannel" target="_blank" class="hover:text-white"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-8">© 2025 SPORT STORE</div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thanh toán – SPORT STORE</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <!-- Thêm PayPal SDK -->
+  <script src="https://www.paypal.com/sdk/js?client-id=AaTT4LUw73wcCZNL6Jt4f3kHU6CrMqf5wuL99VXR4CMjfq9qp-u86CFUT8SpSunpFKUl86Ak476gR8Jr&currency=USD"></script>
+  <style>body { font-family: 'Montserrat', sans-serif; }</style>
+</head>
+<body class="bg-gray-100">
+  <header class="bg-white shadow-md">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-gray-800">SPORT STORE</h1>
+      <a href="cart.html" class="text-blue-600 hover:underline">Quay lại giỏ hàng</a>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-8">
+    <div class="flex flex-col md:flex-row gap-8">
+      <!-- ===== Form Thông Tin Giao Hàng ===== -->
+      <div class="md:w-2/3 bg-white rounded-lg shadow-md p-6">
+        <h2 class="text-xl font-bold mb-6">Thông tin giao hàng</h2>
+        <form id="shipping-form">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div>
+              <label class="block text-gray-700 mb-2">Họ và tên</label>
+              <input id="ship-name" type="text" class="w-full border rounded px-3 py-2" required />
+            </div>
+            <div>
+              <label class="block text-gray-700 mb-2">Số điện thoại</label>
+              <input id="ship-phone" type="tel" class="w-full border rounded px-3 py-2" required />
+            </div>
+          </div>
+          <div class="mb-4">
+            <label class="block text-gray-700 mb-2">Địa chỉ</label>
+            <input id="ship-address" type="text" class="w-full border rounded px-3 py-2" required />
+          </div>
+          <div class="mb-6">
+            <label class="block text-gray-700 mb-2">Ghi chú</label>
+            <textarea id="ship-note" class="w-full border rounded px-3 py-2" rows="3"></textarea>
+          </div>
+          <h2 class="text-xl font-bold mb-4">Phương thức thanh toán</h2>
+          <div class="space-y-3 mb-6">
+            <label class="flex items-center">
+              <input type="radio" name="payment" value="cod" checked class="mr-2 payment-radio" />
+              <span>Thanh toán khi nhận hàng (COD)</span>
+            </label>
+            <label class="flex items-center">
+              <input type="radio" name="payment" value="online" class="mr-2 payment-radio" />
+              <span>Thanh toán Online (PayPal)</span>
+            </label>
+          </div>
+        </form>
+      </div>
+
+      <!-- ===== Order Summary ===== -->
+      <div class="md:w-1/3">
+        <div class="bg-white rounded-lg shadow-md p-6 sticky top-4">
+          <h2 class="text-xl font-bold mb-4">Đơn hàng của bạn</h2>
+          <div id="order-items" class="mb-4">
+            <!-- JS sẽ load danh sách sản phẩm tại đây -->
+          </div>
+          <div class="border-t pt-4">
+            <div class="flex justify-between mb-2">
+              <span>Tạm tính:</span>
+              <span id="order-subtotal">0đ</span>
+            </div>
+            <div class="flex justify-between mb-2">
+              <span>Phí vận chuyển:</span>
+              <span>30.000đ</span>
+            </div>
+            <div class="flex justify-between font-bold text-lg mt-4">
+              <span>Tổng cộng:</span>
+              <span id="order-total">0đ</span>
+            </div>
+          </div>
+          <!-- Nút COD -->
+          <button id="btn-place-order" class="bg-blue-600 text-white w-full py-3 rounded hover:bg-blue-700 mt-6">
+            Đặt hàng
+          </button>
+          <!-- PayPal Button (ẩn mặc định) -->
+          <div id="paypal-button-container" class="mt-6 hidden"></div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // --- Bật Firebase Auth ---
+    const firebaseConfig = {
+  apiKey: "AIzaSyAvpSFwsF7ZSAiTR5UFZ-BOroOkla2SvUg",
+  authDomain: "sport-store-user.firebaseapp.com",
+  projectId: "sport-store-user",
+  storageBucket: "sport-store-user.firebasestorage.app",
+  messagingSenderId: "642253971023",
+  appId: "1:642253971023:web:df7d6e0ea36d61f5af543a",
+  measurementId: "G-QQ3J0X0Z0V"
+};
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        // Chưa login -> redirect về cart.html
+        window.location.href = 'cart.html';
+      } else {
+        initializeCheckout(user);
+      }
+    });
+
+    function initializeCheckout(user) {
+      const apiBase = 'http://localhost:5000/api';
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const formatCurrency = v => v.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+
+      // 1) Render Order Summary
+      function renderOrderSummary() {
+        const container = document.getElementById('order-items');
+        let subtotal = 0;
+        let html = '';
+
+        cart.forEach(item => {
+          subtotal += item.price * item.quantity;
+          html += `
+            <div class="flex justify-between mb-3">
+              <span>${item.name} × ${item.quantity} (Size: ${item.size})</span>
+              <span>${(item.price * item.quantity).toLocaleString()}đ</span>
+            </div>
+          `;
+        });
+
+        container.innerHTML = html;
+        document.getElementById('order-subtotal').textContent = subtotal.toLocaleString() + 'đ';
+        document.getElementById('order-total').textContent = (subtotal + 30000).toLocaleString() + 'đ';
+      }
+
+      // 2) Cập nhật hiển thị COD vs PayPal based on radio
+      const paymentRadios = document.querySelectorAll('.payment-radio');
+      const btnPlaceOrder = document.getElementById('btn-place-order');
+      const paypalContainer = document.getElementById('paypal-button-container');
+
+      function togglePaymentMethod() {
+        const chosen = document.querySelector('input[name="payment"]:checked').value;
+        if (chosen === 'cod') {
+          btnPlaceOrder.classList.remove('hidden');
+          paypalContainer.classList.add('hidden');
+        } else {
+          btnPlaceOrder.classList.add('hidden');
+          paypalContainer.classList.remove('hidden');
+        }
+      }
+
+      paymentRadios.forEach(radio => {
+        radio.addEventListener('change', togglePaymentMethod);
+      });
+
+      // 3) Xử lý nút COD
+      btnPlaceOrder.addEventListener('click', async () => {
+        // Lấy form data
+        const name = document.getElementById('ship-name').value.trim();
+        const phone = document.getElementById('ship-phone').value.trim();
+        const address = document.getElementById('ship-address').value.trim();
+        const note = document.getElementById('ship-note').value.trim();
+        const paymentType = 'cod';
+
+        if (!name || !phone || !address) {
+          alert('Vui lòng điền đầy đủ thông tin giao hàng.');
+          return;
+        }
+        if (!cart.length) {
+          alert('Giỏ hàng đang trống!');
+          return;
+        }
+
+        // Tạo payload
+        const itemsPayload = cart.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          size: item.size,
+          quantity: item.quantity
+        }));
+        const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+
+        const payload = {
+          customerEmail: user.email,
+          customerName: name,
+          customerPhone: phone,
+          customerAddress: address,
+          note: note,
+          paymentMethod: paymentType,
+          items: itemsPayload,
+          subtotal: subtotal,
+          shippingFee: 30000,
+          total: subtotal + 30000,
+          created_at: new Date().toISOString()
+        };
+
+        try {
+          const res = await fetch(`${apiBase}/orders`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+          });
+          if (!res.ok) throw new Error('Lỗi server khi lưu đơn hàng.');
+          localStorage.removeItem('cart');
+          alert('Đặt hàng thành công! Cảm ơn bạn.');
+          window.location.href = 'index.html';
+        } catch (err) {
+          console.error(err);
+          alert('Có lỗi xảy ra khi gửi đơn. Vui lòng thử lại.');
+        }
+      });
+
+      // 4) Khởi tạo PayPal Buttons (chỉ khi user chọn online)
+      paypal.Buttons({
+        createOrder: (_, actions) => {
+          const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+          return actions.order.create({
+            purchase_units: [{
+              amount: {
+                value: ((subtotal + 30000) / 24000).toFixed(2) // quy đổi VND->USD
+              }
+            }]
+          });
+        },
+        onApprove: async (_, actions) => {
+          const details = await actions.order.capture();
+          // Khi PayPal thanh toán thành công, gửi đơn lên server giống COD nhưng có paymentMethod = 'online'
+          const name = document.getElementById('ship-name').value.trim();
+          const phone = document.getElementById('ship-phone').value.trim();
+          const address = document.getElementById('ship-address').value.trim();
+          const note = document.getElementById('ship-note').value.trim();
+
+          if (!name || !phone || !address) {
+            alert('Vui lòng điền đầy đủ thông tin giao hàng trước khi thanh toán!');
+            return;
+          }
+          if (!cart.length) {
+            alert('Giỏ hàng đang trống!');
+            return;
+          }
+
+          const itemsPayload = cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            size: item.size,
+            quantity: item.quantity
+          }));
+          const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
+
+          const payload = {
+            customerEmail: user.email,
+            customerName: name,
+            customerPhone: phone,
+            customerAddress: address,
+            note: note,
+            paymentMethod: 'online',
+            items: itemsPayload,
+            subtotal: subtotal,
+            shippingFee: 30000,
+            total: subtotal + 30000,
+            created_at: new Date().toISOString(),
+            paypalOrderId: details.id
+          };
+
+          try {
+            const res = await fetch(`${apiBase}/orders`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            if (!res.ok) throw new Error('Lỗi server khi lưu đơn hàng.');
+            localStorage.removeItem('cart');
+            alert(`Thanh toán thành công! Cảm ơn ${details.payer.name.given_name}.`);
+            window.location.href = 'index.html';
+          } catch (err) {
+            console.error(err);
+            alert('Thanh toán thành công nhưng lỗi khi lưu đơn. Vui lòng liên hệ hỗ trợ.');
+          }
+        }
+      }).render('#paypal-button-container');
+
+      // 5) Render ban đầu và toggle lại payment
+      renderOrderSummary();
+      togglePaymentMethod();
+    }
+  </script>
+</body>
+</html>

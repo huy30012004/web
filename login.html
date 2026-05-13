@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Đăng nhập / Đăng ký</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #f0f2f5;
+      margin: 0; padding: 0;
+      display: flex; align-items: center; justify-content: center;
+      height: 100vh;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      width: 100%;
+      max-width: 400px;
+      padding: 24px;
+    }
+    .input-field {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    .btn {
+      width: 48%;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .btn-signup { background-color: #28a745; color: white; }
+    .btn-signin { background-color: #007bff; color: white; }
+    .btn + .btn { margin-left: 4%; }
+    #error-msg { color: #e74c3c; margin-top: 8px; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2 class="text-2xl font-bold mb-4 text-center">Đăng nhập / Đăng ký</h2>
+    <input id="email"    type="email"    placeholder="Email"    class="input-field" />
+    <input id="password" type="password" placeholder="Mật khẩu" class="input-field" />
+    <div class="flex justify-between">
+      <button id="btnSignup" class="btn btn-signup">Đăng ký</button>
+      <button id="btnSignin" class="btn btn-signin">Đăng nhập</button>
+    </div>
+    <p id="error-msg"></p>
+  </div>
+
+  <!-- ==== Bước 1: Import Firebase SDK (app-compat + auth-compat) ==== -->
+  
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+
+  <script>
+    // ==== Bước 2: Điền chính xác firebaseConfig của project “sport-store-user” ====
+    const firebaseConfig = {
+      apiKey: "AIzaSyAvpSFwsF7ZSAiTR5UFZ-BOroOkla2SvUg",
+      authDomain: "sport-store-user.firebaseapp.com",
+      projectId: "sport-store-user",
+      storageBucket: "sport-store-user.firebasestorage.app",
+      messagingSenderId: "642253971023",
+      appId: "1:642253971023:web:df7d6e0ea36d61f5af543a",
+      measurementId: "G-QQ3J0X0Z0V"
+    };
+
+    // ==== Bước 3: Initialize Firebase App & Auth ====
+    firebase.initializeApp(firebaseConfig, "userApp");
+    const auth = firebase.auth(firebase.app("userApp"));
+
+    // ==== Bước 4: DOM Elements ====
+    const emailInput    = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const btnSignup     = document.getElementById("btnSignup");
+    const btnSignin     = document.getElementById("btnSignin");
+    const errorMsg      = document.getElementById("error-msg");
+
+    // ==== Bước 5: Xử lý "Đăng ký" ====
+    btnSignup.addEventListener("click", async () => {
+      const email    = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      errorMsg.textContent = "";
+
+      if (!email || !password) {
+        errorMsg.textContent = "Vui lòng điền đủ email và mật khẩu.";
+        return;
+      }
+
+      try {
+        await auth.createUserWithEmailAndPassword(email, password);
+        // Nếu đăng ký thành công, tự động đăng nhập và chuyển về index.html
+        window.location.href = "index.html";
+      } catch (err) {
+        console.error(err);
+        errorMsg.textContent = err.message;
+      }
+    });
+
+    // ==== Bước 6: Xử lý "Đăng nhập" ====
+    btnSignin.addEventListener("click", async () => {
+      const email    = emailInput.value.trim();
+      const password = passwordInput.value.trim();
+      errorMsg.textContent = "";
+
+      if (!email || !password) {
+        errorMsg.textContent = "Vui lòng điền đủ email và mật khẩu.";
+        return;
+      }
+
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        // Nếu đăng nhập thành công, chuyển về index.html
+        window.location.href = "index.html";
+      } catch (err) {
+        console.error(err);
+        errorMsg.textContent = err.message;
+      }
+    });
+
+    // ==== Bước 7 (tuỳ chọn): Nếu muốn kiểm tra trạng thái login ngay khi load trang ====
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        // Nếu user đã login, bạn có thể tự động redirect hoặc ẩn form login
+        // Ví dụ: window.location.href = "index.html";
+      }
+    });
+  </script>
+</body>
+</html>

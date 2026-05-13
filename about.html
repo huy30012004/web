@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Giới thiệu – SPORT STORE</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+  <!-- Font Awesome (nếu cần icon) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" />
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    body { font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+  <!-- Header chung (copy từ index.html hoặc các trang khác) -->
+  <header class="bg-white shadow sticky top-0 z-50">
+    <div class="container mx-auto flex items-center justify-between p-4">
+      <div class="flex items-center space-x-4">
+        <i class="fas fa-running text-2xl text-blue-600"></i>
+        <a href="index.html" class="text-xl font-bold text-gray-800">SPORT STORE</a>
+        <nav class="relative">
+          <ul class="flex space-x-6">
+            <li><a href="index.html" class="hover:text-blue-600 transition">Trang chủ</a></li>
+            <li><a href="about.html" class="text-blue-600 font-medium">Giới thiệu</a></li>
+            <li><a href="news.html" class="hover:text-blue-600 transition">Tin tức</a></li>
+            <li><a href="contact.html" class="hover:text-blue-600 transition">Liên hệ</a></li>
+          </ul>
+        </nav>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="cart.html" class="relative text-gray-800 hover:text-blue-600">
+          <i class="fas fa-shopping-cart text-xl"></i>
+          <span id="cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main content cho "Giới thiệu" -->
+  <main class="container mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold mb-6">Giới thiệu SPORT STORE</h1>
+    <p class="mb-4">
+      Chào mừng bạn đến với SPORT STORE – nơi cung cấp những sản phẩm thể thao chính hãng, chất lượng cao.
+    </p>
+    <p class="mb-4">
+      <strong>SPORT STORE</strong> được thành lập với sứ mệnh mang đến cho khách hàng những trải nghiệm mua sắm tuyệt vời nhất về giày, quần áo và phụ kiện thể thao.  
+      Chúng tôi cam kết:
+    </p>
+    <ul class="list-disc list-inside mb-4">
+      <li>Sản phẩm chính hãng, đa dạng mẫu mã.</li>
+      <li>Giá cả hợp lý, khuyến mãi thường xuyên.</li>
+      <li>Dịch vụ chăm sóc khách hàng 24/7.</li>
+      <li>Giao hàng nhanh chóng trên toàn quốc.</li>
+    </ul>
+    <p>
+      Cảm ơn bạn đã tin tưởng và lựa chọn SPORT STORE. Chúng tôi luôn nỗ lực cải thiện để mang đến cho bạn tổng thể trải nghiệm mua sắm hoàn hảo nhất.
+    </p>
+  </main>
+
+  <!-- Footer chung (copy từ index.html) -->
+  <footer class="bg-gray-800 text-gray-200 py-10">
+    <div class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+      <div>
+        <h4 class="font-semibold mb-2">Về SPORT STORE</h4>
+        <ul class="space-y-1">
+          <li><a href="about.html" class="hover:text-white">Giới thiệu</a></li>
+          <li><a href="news.html" class="hover:text-white">Tin tức</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-2">Hỗ trợ</h4>
+        <ul class="space-y-1">
+          <li><a href="contact.html" class="hover:text-white">Liên hệ</a></li>
+          <li><a href="guide.html" class="hover:text-white">Hướng dẫn mua hàng</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-2">Chính sách</h4>
+        <ul class="space-y-1">
+          <li><a href="returns.html" class="hover:text-white">Đổi trả</a></li>
+          <li><a href="privacy.html" class="hover:text-white">Bảo mật</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-2">Kết nối với chúng tôi</h4>
+        <div class="flex space-x-3">
+          <a href="https://facebook.com/YourPage" target="_blank" class="hover:text-white"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://instagram.com/YourProfile" target="_blank" class="hover:text-white"><i class="fab fa-instagram"></i></a>
+          <a href="https://youtube.com/YourChannel" target="_blank" class="hover:text-white"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-8">© 2025 SPORT STORE</div>
+  </footer>
+
+  <!-- (Nếu bạn cần JS chung, đặt ở đây) -->
+</body>
+</html>

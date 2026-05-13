@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SPORT STORE</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+
+  <!-- Swiper CSS (bắt buộc) -->
+  <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        crossorigin="anonymous" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+  <style>
+    /* Ẩn thanh cuộn ngang ở cấp BODY */
+    body {
+      overflow-x: hidden;
+      font-family: 'Montserrat', sans-serif;
+    }
+
+    /* Ép chiều cao cố định cho hero slider */
+    .hero-slider {
+      height: 24rem; /* tương đương h-96 */
+    }
+
+    /* Đảm bảo mỗi ảnh trong slide phủ kín khung mà không bị bóp */
+    .hero-slider .swiper-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-100">
+  <!-- Header + Mega-menu -->
+  <header class="bg-white shadow sticky top-0 z-50">
+    <div class="container mx-auto flex items-center justify-between p-4">
+      <div class="flex items-center space-x-4">
+        <i class="fas fa-running text-2xl text-blue-600"></i>
+        <a href="#" class="text-xl font-bold text-gray-800">SPORT STORE</a>
+        <nav class="relative">
+          <ul class="flex space-x-6">
+            <li class="group relative">
+              <a href="#" class="hover:text-blue-600 category-group" data-group="giay">Giày</a>
+              <div class="absolute left-0 top-full mt-2 w-64
+                         bg-white text-gray-900 shadow-lg rounded-md
+                         opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                <ul class="p-4 space-y-2">
+                  <li>
+                    <a href="#" class="category-link hover:text-blue-600 transition" data-category="football">
+                      Football
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" class="category-link hover:text-blue-600 transition" data-category="running">
+                      Running
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" class="category-link hover:text-blue-600 transition" data-category="lifestyle">
+                      Lifestyle
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="group relative">
+              <a href="#" class="hover:text-blue-600 category-group" data-group="quanao">Quần áo</a>
+              <div class="absolute left-0 top-full mt-2 w-64
+                         bg-white text-gray-900 shadow-lg rounded-md
+                         opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                <ul class="p-4 space-y-2">
+                  <li>
+                    <a href="#" class="category-link hover:text-blue-600 transition" data-category="nam">
+                      Nam
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" class="category-link hover:text-blue-600 transition" data-category="nu">
+                      Nữ
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" class="category-link hover:text-blue-600 transition" data-category="treem">
+                      Trẻ em
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+            <li class="group relative">
+              <a href="#" class="hover:text-blue-600 category-group" data-group="phukien">Phụ kiện</a>
+              <div class="absolute left-0 top-full mt-2 w-64
+                         bg-white text-gray-900 shadow-lg rounded-md
+                         opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                <ul class="p-4 space-y-2">
+                  <li>
+                    <a href="#" class="category-link hover:text-blue-600 transition" data-category="balo">
+                      Balo
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" class="category-link hover:text-blue-600 transition" data-category="non">
+                      Nón
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" class="category-link hover:text-blue-600 transition" data-category="tuisach">
+                      Túi xách
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="flex items-center space-x-4">
+      <div class="relative flex items-center w-full max-w-sm">
+  <input id="searchInput"
+         type="text"
+         placeholder="Tìm kiếm sản phẩm..."
+         class="w-full border border-gray-300 rounded-full px-4 py-2 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+  <button id="searchBtn"
+          class="absolute right-2 text-gray-500 hover:text-blue-600">
+    <i class="fas fa-search"></i>
+  </button>
+
+  <!-- Gợi ý tự động -->
+  <ul id="autocomplete" class="absolute top-full left-0 bg-white shadow mt-1 w-full hidden rounded z-10"></ul>
+</div>
+
+
+      <!-- 2) Icon “Tài khoản” với dropdown -->
+      <div class="relative group">
+        <a href="#"
+           id="accountIcon"
+           class="text-gray-800 hover:text-blue-600 px-2 py-1">
+          <i class="fas fa-user-circle text-xl"></i>
+        </a>
+        <div id="accountDropdown"
+       class="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg
+              opacity-0 scale-95 invisible group-hover:opacity-100 group-hover:scale-100 group-hover:visible
+              transition-all duration-200 ease-out
+              hover:opacity-100 hover:scale-100 hover:visible z-50">
+
+          <!-- Link đổi mật khẩu -->
+          <a href="change-password.html"
+             class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+            Đổi mật khẩu
+          </a>
+          <!-- Link xem trạng thái đơn -->
+          <a href="order-status.html"
+             class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+            Xem trạng thái đơn
+          </a>
+          <!-- Link xem lịch sử mua hàng -->
+          <a href="purchase-history.html"
+             class="block px-4 py-2 text-gray-700 hover:bg-gray-100">
+            Lịch sử mua hàng
+          </a>
+          <hr class="my-1 border-gray-200" />
+          <!-- Nút Đăng xuất -->
+          <button id="logoutBtn"
+                  class="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
+            Đăng xuất
+          </button>
+        </div>
+      </div>
+
+      <!-- 3) Icon Giỏ hàng -->
+      <a href="cart.html" class="relative text-gray-800 hover:text-blue-600 px-2 py-1">
+        <i class="fas fa-shopping-cart text-xl"></i>
+        <span id="cart-count"
+              class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+          0
+        </span>
+      </a>
+    </div>
+  </div>
+
+    </div>
+  </header>
+
+  <!-- === START: Hero Slider với Swiper === -->
+  <section class="relative overflow-hidden">
+    <div class="swiper hero-slider">
+      <div class="swiper-wrapper">
+        <!-- Slide #1 -->
+        <div class="swiper-slide">
+          <img
+            src="https://i.ibb.co/tMvcZnCv/z6725126171638-7512be71191322d4c7cf9517c5273119.jpg"
+            alt="Banner 1" />
+          <div class="absolute inset-0 flex items-center justify-center">
+            <button class="bg-white text-black px-6 py-3 rounded shadow hover:bg-gray-100 transition">
+              Khám phá
+            </button>
+          </div>
+        </div>
+        <!-- Slide #2 -->
+        <div class="swiper-slide">
+          <img
+            src="https://phongvu.vn/cong-nghe/wp-content/uploads/sites/2/2022/12/hinh-nen-bong-da-7.png"
+            alt="Banner 2" />
+          <div class="absolute inset-0 flex items-center justify-center">
+            <button class="bg-white text-black px-6 py-3 rounded shadow hover:bg-gray-100 transition">
+              Mua ngay
+            </button>
+          </div>
+        </div>
+        <!-- Nếu cần slide #3, #4… -->
+      </div>
+      <!-- Nút Prev / Next của Swiper -->
+      <div class="swiper-button-prev text-white hover:text-blue-400"></div>
+      <div class="swiper-button-next text-white hover:text-blue-400"></div>
+      <!-- Nếu muốn pagination dạng chấm, bạn có thể thêm: -->
+      <!-- <div class="swiper-pagination"></div> -->
+    </div>
+  </section>
+  <!-- === END: Hero Slider với Swiper === -->
+
+  <!-- Categories Icons -->
+  <section class="py-8">
+    <div class="absolute inset-0 -z-10">
+      <img
+        src="https://anhdepbonphuong.com/wp-content/uploads/2016/01/Down-bo-hinh-nen-the-thao-noi-tieng-khap-the-gioi-4.jpg"
+        alt="Category Background Blur"
+        class="w-full h-full object-cover filter blur-lg opacity-50" />
+    </div>
+    <div class="container mx-auto flex justify-around">
+      <a href="#" class="filter-cat flex flex-col items-center" data-category="giay">
+        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow">
+          <img
+            src="https://png.pngtree.com/png-clipart/20230419/original/pngtree-sneakers-line-icon-png-image_9066569.png"
+            alt="Giày"
+            class="w-8 h-8 object-contain" />
+        </div>
+        <span class="mt-2 text-gray-700">Giày</span>
+      </a>
+      <a href="#" class="filter-cat flex flex-col items-center" data-category="quanao">
+        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow">
+          <img
+            src="https://png.pngtree.com/png-clipart/20191120/original/pngtree-sweater-line-icon-vector-png-image_5074684.jpg"
+            alt="Quần áo"
+            class="w-8 h-8 object-contain" />
+        </div>
+        <span class="mt-2 text-gray-700">Quần áo</span>
+      </a>
+      <a href="#" class="filter-cat flex flex-col items-center" data-category="balo">
+        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow">
+          <img
+            src="https://media.istockphoto.com/id/1159322957/vi/vec-to/bi%E1%BB%83u-t%C6%B0%E1%BB%A3ng-schoolbag-h%C3%ACnh-minh-h%E1%BB%8Da-%C4%91%C6%B0%E1%BB%9Dng-m%E1%BB%8Fng-hi%E1%BB%87n-%C4%91%E1%BA%A1i-h%E1%BB%A3p-th%E1%BB%9Di-trang-c%E1%BB%A7a-m%E1%BB%99t-chi%E1%BA%BFc-t%C3%BAi-ba.jpg?s=612x612&w=0&k=20&c=c-H--kS3PggHEsWPWEPqUIKKh6t0gCEhGDs1UWNRtxU="
+            alt="Balo"
+            class="w-8 h-8 object-contain" />
+        </div>
+        <span class="mt-2 text-gray-700">Balo</span>
+      </a>
+      <a href="#" class="filter-cat flex flex-col items-center" data-category="bong">
+        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow">
+          <img
+            src="https://img.lovepik.com/png/20231001/cartoon-black-and-white-football-logo_50410_wh1200.png"
+            alt="Bóng"
+            class="w-8 h-8 object-contain" />
+        </div>
+        <span class="mt-2 text-gray-700">Bóng</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- Sort Bar & Product Grid -->
+  <section class="container mx-auto px-4 py-6">
+    <div class="flex justify-between items-center mb-4">
+      <div>
+        <label>Sắp xếp:</label>
+        <select id="sortSelect" class="border px-2 py-1 rounded">
+          <option value="">Mặc định</option>
+          <option value="priceAsc">Giá tăng dần</option>
+          <option value="priceDesc">Giá giảm dần</option>
+        </select>
+      </div>
+      <div>
+        <button id="loadMoreBtn" class="bg-blue-600 text-white px-4 py-2 rounded">Xem thêm</button>
+      </div>
+    </div>
+    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </section>
+
+ <!-- Quick View Modal -->
+<div id="quickViewModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 hidden z-50">
+  <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl relative">
+    <!-- Nút đóng -->
+    <button class="absolute top-2 right-2 text-gray-600 hover:text-gray-800" onclick="toggleQuickView(false)">
+      ✕
+    </button>
+    <div class="flex flex-col md:flex-row">
+      <!-- Ảnh sản phẩm -->
+      <img id="quickViewImg"
+           src=""
+           alt="Hình sản phẩm"
+           class="w-full md:w-1/2 h-64 object-cover rounded-t-lg md:rounded-l-lg" />
+
+      <!-- Nội dung bên phải -->
+      <div class="p-6 flex-1 flex flex-col">
+        <h3 id="quickViewName" class="text-2xl font-semibold mb-2"></h3>
+
+        <!-- Ô mô tả có scroll -->
+        <div id="quickViewDescContainer"
+             class="border rounded p-3 mb-4 max-h-48 overflow-y-auto text-gray-700">
+          <p id="quickViewDesc"></p>
+        </div>
+
+        <p id="quickViewPrice" class="text-red-500 font-bold mb-4"></p>
+
+        <!-- Chọn Size -->
+        <div class="mb-4">
+          <label for="selectSize" class="block font-medium text-gray-700 mb-1">Chọn Size:</label>
+          <select id="selectSize" class="border p-2 rounded w-full max-w-xs">
+            <!-- JS sẽ fill options -->
+          </select>
+        </div>
+
+        <!-- Chọn Số lượng -->
+        <div class="mb-6">
+          <label for="selectQty" class="block font-medium text-gray-700 mb-1">Số lượng:</label>
+          <select id="selectQty" class="border p-2 rounded w-full max-w-xs">
+            <script>
+              for (let i = 1; i <= 10; i++) {
+                document.write(`<option value="${i}">${i}</option>`);
+              }
+            </script>
+          </select>
+        </div>
+
+        <!-- Nút Thêm vào giỏ -->
+        <button id="btnAddToCart"
+                class="mt-auto bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition">
+          Thêm vào giỏ
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+  <section class="bg-blue-600 text-black py-12">
+  <div class="container mx-auto text-center">
+    <h2 class="text-3xl font-bold mb-4">Đăng ký nhận tin</h2>
+    <p class="mb-6">Nhận thông tin ưu đãi và sản phẩm mới nhất</p>
+    
+    <input id="newsletterEmail"
+           type="email"
+           placeholder="Nhập email của bạn"
+           class="px-4 py-2 rounded-l w-1/3 focus:outline-none" />
+    
+    <button id="newsletterBtn" class="bg-white text-blue-600 px-6 py-2 rounded-r">
+      Đăng ký
+    </button>
+
+    <!-- Thông báo -->
+    <p id="newsletterMessage" class="mt-4 text-black-500 font-semibold hidden">
+      Đăng ký thành công!
+    </p>
+  </div>
+</section>
+
+<script>
+  document.getElementById('newsletterBtn').addEventListener('click', function () {
+    const email = document.getElementById('newsletterEmail').value;
+    const message = document.getElementById('newsletterMessage');
+
+    if (email.trim() === '') {
+      alert('Vui lòng nhập email!');
+      return;
+    }
+
+    message.classList.remove('hidden');
+    message.textContent = 'Đăng ký thành công!';
+    document.getElementById('newsletterEmail').value = '';
+  });
+</script>
+
+  
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-gray-200 py-10">
+    <div class="container mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 px-4">
+      <div>
+        <h4 class="font-semibold mb-2">Về SPORT STORE</h4>
+        <ul class="space-y-1">
+          <li><a href="about.html" class="hover:text-white">Giới thiệu</a></li>
+          <li><a href="news.html" class="hover:text-white">Tin tức</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-2">Hỗ trợ</h4>
+        <ul class="space-y-1">
+          <li><a href="contact.html" class="hover:text-white">Liên hệ</a></li>
+          <li><a href="guide.html" class="hover:text-white">Hướng dẫn mua hàng</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-2">Chính sách</h4>
+        <ul class="space-y-1">
+          <li><a href="returns.html" class="hover:text-white">Đổi trả</a></li>
+          <li><a href="privacy.html" class="hover:text-white">Bảo mật</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-semibold mb-2">Kết nối với chúng tôi</h4>
+        <div class="flex space-x-3">
+          <a href="https://www.facebook.com/" class="hover:text-white"><i class="fab fa-facebook-f"></i></a>
+          <a href="https://www.instagram.com/" class="hover:text-white"><i class="fab fa-instagram"></i></a>
+          <a href="https://www.youtube.com/" class="hover:text-white"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="text-center mt-8">© 2025 SPORT STORE</div>
+  </footer>
+
+      <!-- Scripts -->
+  <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script>
+    // ===== Khởi tạo Swiper (giữ nguyên) =====
+    new Swiper('.hero-slider', {
+      loop: true,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev'
+      }
+    });
+
+    const apiBase = 'http://localhost:5000/api';
+    let currentQuickProduct = null;
+
+    // ===== A. Hàm hỗ trợ kiểm tra nhóm sản phẩm =====
+    const shoeCategories = ['football', 'running', 'lifestyle'];
+    const clothesCategories = ['nam', 'nu', 'treem'];
+
+    function isShoe(categories) {
+      return categories.some(cat => shoeCategories.includes(cat));
+    }
+    function isClothes(categories) {
+      return categories.some(cat => clothesCategories.includes(cat));
+    }
+
+    // ===== B. Ẩn/Hiện Quick View Modal =====
+    function toggleQuickView(show) {
+      document.getElementById('quickViewModal').classList.toggle('hidden', !show);
+    }
+
+    // ===== C. Mở Quick View lấy chi tiết và fill đúng tập size =====
+    async function openQuickView(id) {
+      try {
+        const res = await fetch(`${apiBase}/products/${id}`);
+        const p = await res.json();
+        currentQuickProduct = p;
+
+        // 1) Đổ ảnh, tên, mô tả, giá
+        document.getElementById('quickViewImg').src = p.image_url;
+        document.getElementById('quickViewName').textContent = p.name;
+        document.getElementById('quickViewDesc').textContent = p.description || '';
+        document.getElementById('quickViewPrice').textContent =
+          Number(p.price).toLocaleString('vi-VN') + 'đ';
+
+        // 2) Xác định tập size phù hợp
+        let sizeOptions = [];
+        if (Array.isArray(p.categories)) {
+          if (isShoe(p.categories)) {
+            // Nếu là giày
+            sizeOptions = ['38','39','40','41','42','43','44'];
+          } else if (isClothes(p.categories)) {
+            // Nếu là quần áo
+            sizeOptions = ['S','M','L','XL','XXL'];
+          }
+        }
+        // Nếu không nằm trong 2 nhóm trên, có thể để default (ví dụ cho phụ kiện)
+        if (sizeOptions.length === 0) {
+          sizeOptions = ['M','L','XL'];
+        }
+
+        // 3) Fill dropdown 'selectSize'
+        const selectSizeEl = document.getElementById('selectSize');
+        selectSizeEl.innerHTML = '';
+        sizeOptions.forEach(sz => {
+          const opt = document.createElement('option');
+          opt.value = sz;
+          opt.textContent = sz;
+          selectSizeEl.appendChild(opt);
+        });
+
+        // 4) Reset quantity về 1
+        document.getElementById('selectQty').value = 1;
+
+        // Hiển thị modal
+        toggleQuickView(true);
+      } catch (err) {
+        console.error('Lỗi khi fetch product:', err);
+      }
+    }
+
+    // ===== D. Hàm thêm vào giỏ kèm size & quantity =====
+    function addToCartWithOptions() {
+      if (!currentQuickProduct) return;
+
+      const size = document.getElementById('selectSize').value;
+      const quantity = parseInt(document.getElementById('selectQty').value);
+
+      // Lấy cart hiện tại hoặc khởi tạo mới
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+      // Kiểm tra xem đã có item cùng id + same size chưa?
+      const idx = cart.findIndex(item =>
+        item.id === currentQuickProduct.id && item.size === size
+      );
+      if (idx !== -1) {
+        cart[idx].quantity += quantity;
+      } else {
+        cart.push({
+          id: currentQuickProduct.id,
+          name: currentQuickProduct.name,
+          price: currentQuickProduct.price,
+          size: size,
+          quantity: quantity,
+          image_url: currentQuickProduct.image_url || ''
+        });
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      toggleQuickView(false);
+    }
+
+    // ===== E. Cập nhật badge số trên icon giỏ =====
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
+      document.getElementById('cart-count').textContent = totalQty;
+    }
+
+    // ===== F. Load & Render Grid Sản phẩm =====
+    let currentProducts = [];
+    let page = 1;
+
+    async function loadProducts() {
+      try {
+        const res = await fetch(`${apiBase}/products?page=${page}&limit=6`);
+        const arr = await res.json();
+        renderProducts(arr);
+      } catch (err) {
+        console.error('Lỗi khi load products:', err);
+      }
+    }
+
+    document.getElementById('loadMoreBtn').addEventListener('click', () => {
+      page++;
+      loadProducts();
+    });
+
+  function renderProducts(products) {
+  // 1) Sort: đẩy sản phẩm giảm giá lên đầu (giảm dần %)
+  products.sort((a, b) => (b.discount || 0) - (a.discount || 0));
+
+  currentProducts = products.slice();
+  const grid = document.getElementById('productGrid');
+
+  if (!products.length) {
+    grid.innerHTML = `
+      <p class="text-center col-span-3 text-gray-500">
+        Không tìm thấy sản phẩm nào.
+      </p>`;
+    return;
+  }
+
+  // 2) Map từng sản phẩm thành card
+  grid.innerHTML = products.map(p => {
+    const price      = Number(p.price);
+    const discount   = p.discount || 0;
+    const finalPrice = Math.round(price * (100 - discount) / 100);
+
+    // sao trung bình
+    const avg       = Math.round(p.averageRating || 0);
+    const cnt       = p.reviewCount   || 0;
+    const starsHtml = Array.from({ length: 5 }, (_, i) =>
+      `<i class="fas fa-star ${i < avg ? 'text-yellow-400' : 'text-gray-300'} mr-0.5"></i>`
+    ).join('');
+
+    return `
+      <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition duration-300">
+        <div class="relative group">
+          ${discount > 0 ? `
+            <span class="absolute top-2 left-2 bg-red-600 text-white px-2 py-1 text-xs rounded">
+              Giảm ${discount}%
+            </span>` : ``}
+          <img src="${p.image_url}" alt="${p.name}" class="w-full h-64 object-cover"/>
+          <button onclick="openQuickView(${p.id})"
+                  class="opacity-0 group-hover:opacity-100 absolute top-2 right-2 bg-white p-2 rounded-full shadow">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+        <div class="p-4 flex flex-col justify-between">
+          <h3 class="font-semibold text-lg mb-1">${p.name}</h3>
+
+          <!-- sao trung bình -->
+          <div class="flex items-center mb-2">
+            <span class="avg-stars cursor-pointer" data-id="${p.id}">
+              ${starsHtml}
+            </span>
+            <span class="ml-1 text-sm text-gray-600">(${cnt})</span>
+          </div>
+
+          <!-- giá -->
+          ${discount > 0
+            ? `<div class="mb-4">
+                 <span class="text-red-500 font-bold text-xl">
+                   ${finalPrice.toLocaleString('vi-VN')}đ
+                 </span>
+                 <span class="line-through text-gray-400 ml-2">
+                   ${price.toLocaleString('vi-VN')}đ
+                 </span>
+               </div>`
+            : `<span class="text-red-500 font-bold mb-4">
+                 ${price.toLocaleString('vi-VN')}đ
+               </span>`}
+
+          <!-- nút -->
+          <div class="flex justify-between items-center">
+            <button onclick="openQuickView(${p.id})"
+                    class="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700">
+              <i class="fas fa-shopping-cart"></i>
+            </button>
+            <button onclick="openQuickView(${p.id})"
+                    class="bg-gray-200 text-gray-800 px-3 py-1 rounded hover:bg-gray-300 text-sm">
+              Xem chi tiết
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // 3) Sau khi render xong, nếu bạn có hàm bindAvgStars để show comment, hãy gọi nó ở đây:
+  if (typeof bindAvgStars === 'function') bindAvgStars();
+}
+
+
+    // ===== G. Search + Autocomplete =====
+    let timeout;
+    document.getElementById('searchInput').addEventListener('input', e => {
+      clearTimeout(timeout);
+      const q = e.target.value.trim().toLowerCase();
+      const ul = document.getElementById('autocomplete');
+      if (!q) {
+        ul.classList.add('hidden');
+        return;
+      }
+      timeout = setTimeout(async () => {
+        try {
+          const res = await fetch(`${apiBase}/products?search=${encodeURIComponent(q)}`);
+          const list = await res.json();
+          if (!list.length) {
+            ul.classList.add('hidden');
+            return;
+          }
+          ul.innerHTML = list.map(p =>
+            `<li class="px-4 py-2 hover:bg-gray-100 cursor-pointer" onclick="selectSuggestion('${p.name}')">${p.name}</li>`
+          ).join('');
+          ul.classList.remove('hidden');
+        } catch (err) {
+          console.error('Lỗi autocomplete:', err);
+        }
+      }, 300);
+    });
+  // ===== H. Bind click lên sao trung bình để show bình luận =====
+  // Gọi mỗi khi bạn vừa render xong products
+  function bindAvgStars() {
+    document.querySelectorAll('.avg-stars').forEach(el => {
+      el.addEventListener('click', async () => {
+        const pid = el.dataset.id;
+        try {
+          const res = await fetch(`${apiBase}/products/${pid}/reviews`);
+          const { reviews } = await res.json();
+          if (!reviews.length) {
+            return alert('Sản phẩm chưa có đánh giá nào.');
+          }
+          const msg = reviews.map(r => {
+            const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+            return `${stars}\n${r.comment || '(không có bình luận)'}\n— ${r.name}`;
+          }).join('\n\n');
+          alert(msg);
+        } catch (e) {
+          console.error(e);
+          alert('Không tải được bình luận.');
+        }
+      });
+    });
+  }
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        doSearch();
+        document.getElementById('autocomplete').classList.add('hidden');
+      }
+    });
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      doSearch();
+      document.getElementById('autocomplete').classList.add('hidden');
+    });
+    window.selectSuggestion = function (productName) {
+      document.getElementById('searchInput').value = productName;
+      doSearch();
+      document.getElementById('autocomplete').classList.add('hidden');
+    };
+    async function doSearch() {
+      const q = document.getElementById('searchInput').value.trim();
+      if (!q) {
+        page = 1;
+        loadProducts();
+        return;
+      }
+      try {
+        const res = await fetch(`${apiBase}/products?search=${encodeURIComponent(q)}`);
+        const products = await res.json();
+        renderProducts(products);
+      } catch (err) {
+        console.error('Lỗi tìm kiếm:', err);
+      }
+    }
+
+    // ===== H. Sort Bar =====
+    document.getElementById('sortSelect').addEventListener('change', e => {
+      const sortValue = e.target.value;
+      if (!currentProducts.length) return;
+
+      let sorted = [...currentProducts];
+      if (sortValue === 'priceAsc') {
+        sorted.sort((a, b) => a.price - b.price);
+      } else if (sortValue === 'priceDesc') {
+        sorted.sort((a, b) => b.price - a.price);
+      } else {
+        page = 1;
+        loadProducts();
+        return;
+      }
+      renderProducts(sorted);
+    });
+
+    // ===== I. Filter theo Category Group / Category Link =====
+    const categoryGroupMap = {
+      giay: ['football', 'running', 'lifestyle'],
+      quanao: ['nam', 'nu', 'treem'],
+      phukien: ['balo', 'non', 'tuisach']
+    };
+    document.querySelectorAll('.category-link').forEach(link => {
+      link.addEventListener('click', async e => {
+        e.preventDefault();
+        const category = link.dataset.category;
+        try {
+          const res = await fetch(`${apiBase}/products?category=${category}`);
+          const products = await res.json();
+          renderProducts(products);
+        } catch (err) {
+          console.error('Lỗi lọc theo category:', err);
+        }
+      });
+    });
+    document.querySelectorAll('.category-group').forEach(link => {
+      link.addEventListener('click', async e => {
+        e.preventDefault();
+        const group = link.dataset.group;
+        try {
+          const resAll = await fetch(`${apiBase}/products`);
+          const allProducts = await resAll.json();
+          const filtered = allProducts.filter(p =>
+            (p.categories || []).some(cat => categoryGroupMap[group].includes(cat))
+          );
+          renderProducts(filtered);
+        } catch (err) {
+          console.error('Lỗi lọc theo group:', err);
+        }
+      });
+    });
+document.querySelectorAll('.filter-cat').forEach(el => {
+    el.addEventListener('click', async e => {
+      e.preventDefault();
+      const cat = el.dataset.category;
+      try {
+        // gọi API lấy đúng category
+        const res = await fetch(`${apiBase}/products?category=${cat}`);
+        if (!res.ok) throw new Error('Không lấy được danh sách');
+        const prods = await res.json();
+        // vẽ lại grid
+        renderProducts(prods);
+        // bind lại callback cho sao trung bình (nếu có)
+        if (typeof bindAvgStars === 'function') bindAvgStars();
+      } catch (err) {
+        console.error('Lỗi khi lọc:', err);
+        alert('Không thể load sản phẩm. Vui lòng thử lại.');
+      }
+    });
+  });
+    // ===== J. Khởi tạo khi load trang =====
+    document.addEventListener('DOMContentLoaded', () => {
+      loadProducts();
+      updateCartCount();
+      document.getElementById('btnAddToCart').addEventListener('click', addToCartWithOptions);
+    });
+
+    // Expose để HTML onclick có thể gọi
+    window.openQuickView = openQuickView;
+    window.toggleQuickView = toggleQuickView;
+  </script>
+    <!-- … các phần HTML khác của index.html … -->
+
+  <!-- Firebase App (compat) + Auth (compat) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script>
+    // === 1) Firebase Configuration của project “sport-store-user” ===
+    const firebaseConfig = {
+      apiKey: "AIzaSyAvpSFwsF7ZSAiTR5UFZ-BOroOkla2SvUg",
+      authDomain: "sport-store-user.firebaseapp.com",
+      projectId: "sport-store-user",
+      storageBucket: "sport-store-user.firebasestorage.app",
+      messagingSenderId: "642253971023",
+      appId: "1:642253971023:web:df7d6e0ea36d61f5af543a",
+      measurementId: "G-QQ3J0X0Z0V"
+    };
+
+    // === 2) Initialize Firebase App & Auth với tên “userApp” ===
+    firebase.initializeApp(firebaseConfig, "userApp");
+    const userAuth = firebase.auth(firebase.app("userApp"));
+
+    // === 3) Quản lý hiển thị dropdown “Tài khoản” ===
+    // - Nếu chưa đăng nhập: click vào icon user => chuyển về login.html, ẩn dropdown
+    // - Nếu đã đăng nhập: cho hover-show dropdown bình thường
+    userAuth.onAuthStateChanged(user => {
+      const accountIcon     = document.getElementById('accountIcon');
+      const accountDropdown = document.getElementById('accountDropdown');
+
+      if (!user) {
+        // Chưa login → click icon user sẽ đưa về login.html
+        accountIcon.onclick = e => {
+          e.preventDefault();
+          window.location.href = 'login.html';
+        };
+        // Ẩn dropdown khi chưa login
+        accountDropdown.style.display = 'none';
+      } else {
+        // Đã login → xóa onclick, cho phép hover-show dropdown
+        accountIcon.onclick = null;
+        accountDropdown.style.display = ''; // Hiển thị theo CSS của .group-hover
+      }
+    });
+
+    // === 4) Xử lý nút “Đăng xuất” ===
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      userAuth.signOut()
+        .then(() => {
+          // Sau khi logout, redirect về trang login
+          window.location.href = 'login.html';
+        })
+        .catch(err => {
+          console.error('Lỗi khi đăng xuất:', err);
+        });
+    });
+  </script>
+<script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+<df-messenger
+  intent="WELCOME"
+  chat-title="Chatbot"
+  agent-id="98f2adde-e1e3-40c4-8763-f014701bc667"
+  language-code="vi"
+></df-messenger>
+
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lịch sử mua hàng</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <!-- FontAwesome để vẽ icon ★ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+  <style>
+    body { font-family: 'Montserrat', sans-serif; background-color: #f0f2f5; }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: white;
+      border-radius: 8px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+    }
+    th, td {
+      padding: 12px 8px;
+      border: 1px solid #e2e8f0;
+      text-align: left;
+    }
+    th { background-color: #f7fafc; }
+    .status-processing { color: #e67e22; font-weight: bold; }
+    .status-shipped    { color: #3498db; font-weight: bold; }
+    .status-completed  { color: #2ecc71; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-2xl font-bold mb-4">Lịch sử mua hàng</h2>
+    <div id="historyContainer">
+      <p class="text-gray-500">Đang tải lịch sử…</p>
+    </div>
+  </div>
+
+  <!-- Review Modal -->
+  <div id="reviewModal"
+       class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+    <div class="bg-white rounded-lg w-11/12 max-w-md p-6 relative">
+      <button id="closeReview"
+              class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">&times;</button>
+      <h3 class="text-xl font-semibold mb-4">Đánh Giá Sản Phẩm</h3>
+      <div id="modalStars" class="flex space-x-2 mb-4"></div>
+      <textarea id="modalComment"
+                class="w-full border rounded p-2 mb-4"
+                rows="3"
+                placeholder="Viết bình luận…"></textarea>
+      <input type="file" id="modalImage" accept="image/*" class="mb-4" />
+      <button id="submitReview"
+              class="w-full bg-orange-500 text-white py-2 rounded">
+        Hoàn Thành
+      </button>
+    </div>
+  </div>
+
+  <!-- Firebase App + Auth-compat -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script>
+    // --- 1) Cấu hình Firebase ---
+    const firebaseConfig = {
+      apiKey: "AIzaSyAvpSFwsF7ZSAiTR5UFZ-BOroOkla2SvUg",
+      authDomain: "sport-store-user.firebaseapp.com",
+      projectId: "sport-store-user",
+      storageBucket: "sport-store-user.firebasestorage.app",
+      messagingSenderId: "642253971023",
+      appId: "1:642253971023:web:df7d6e0ea36d61f5af543a",
+      measurementId: "G-QQ3J0X0Z0V"
+    };
+    firebase.initializeApp(firebaseConfig, "userApp");
+    const auth = firebase.auth(firebase.app("userApp"));
+
+    // --- 2) Chuyển về login nếu chưa auth ---
+    auth.onAuthStateChanged(user => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        loadOrderHistory(user.email);
+      }
+    });
+
+    // --- 3) Load & render lịch sử ---
+    async function loadOrderHistory(email) {
+      const container = document.getElementById("historyContainer");
+      container.innerHTML = '<p class="text-gray-500">Đang tải lịch sử…</p>';
+      try {
+        const res = await fetch("http://localhost:5000/api/orders");
+        if (!res.ok) throw new Error("Không lấy được đơn hàng từ server");
+        const ordersArr = await res.json();
+
+        // Lọc theo email user
+        const orders = ordersArr.filter(o =>
+          (o.customerEmail || "").toLowerCase() === email.toLowerCase()
+        );
+        if (!orders.length) {
+          container.innerHTML = '<p class="text-gray-500">Bạn chưa có đơn hàng nào.</p>';
+          return;
+        }
+
+        // Sắp xếp giảm dần
+        orders.sort((a,b)=>
+          new Date(b.created_at||b.timestamp) - new Date(a.created_at||a.timestamp)
+        );
+
+        // Xây table
+        let html = `
+          <table>
+            <thead>
+              <tr>
+                <th>Mã Đơn</th>
+                <th>Ngày Đặt</th>
+                <th>Tổng Tiền</th>
+                <th>Xem chi tiết</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        orders.forEach(o => {
+          const dt = new Date(o.created_at||o.timestamp)
+                       .toLocaleString("vi-VN");
+          const total = Number(o.total||(o.subtotal+o.shippingFee))
+                          .toLocaleString("vi-VN")+"đ";
+          let cls = o.status==="processing" ? "status-processing"
+                  : o.status==="shipped"    ? "status-shipped"
+                  :                              "status-completed";
+          html += `
+            <tr>
+              <td>#${o.id}</td>
+              <td>${dt}</td>
+              <td>${total}</td>
+              <td>
+                <a href="order-detail.html?id=${o.id}"
+                   class="text-blue-600 hover:underline">
+                  Xem chi tiết
+                </a>
+              </td>
+              
+            </tr>
+          `;
+        });
+        html += `
+            </tbody>
+          </table>
+        `;
+        container.innerHTML = html;
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = `<p class="text-red-500">Lỗi khi tải lịch sử: ${err.message}</p>`;
+      }
+    }
+
+    // --- 4) Modal & xử lý đánh giá ---
+    document.addEventListener('DOMContentLoaded', ()=>{
+      const modal         = document.getElementById('reviewModal');
+      const closeBtn      = document.getElementById('closeReview');
+      const starsContainer= document.getElementById('modalStars');
+      const commentInput  = document.getElementById('modalComment');
+      const imageInput    = document.getElementById('modalImage');
+      const submitBtn     = document.getElementById('submitReview');
+      let currentOrderId, currentProductId, currentRating=0;
+
+      function renderModalStars(){
+        starsContainer.innerHTML = '';
+        for(let i=1;i<=5;i++){
+          const star=document.createElement('i');
+          star.className='fas fa-star cursor-pointer text-2xl text-gray-300';
+          star.dataset.value=i;
+          star.addEventListener('click', ()=>{
+            currentRating = i;
+            updateModalStars();
+          });
+          starsContainer.appendChild(star);
+        }
+      }
+      function updateModalStars(){
+        starsContainer.querySelectorAll('i').forEach(s=>{
+          const v=+s.dataset.value;
+          s.classList.toggle('text-yellow-400', v<=currentRating);
+          s.classList.toggle('text-gray-300',  v> currentRating);
+        });
+      }
+
+      // Mở modal khi click Đánh giá
+      document.body.addEventListener('click', e=>{
+        const btn = e.target.closest('.open-review-btn');
+        if (!btn) return;
+        currentOrderId   = btn.dataset.orderId;
+        currentProductId = btn.dataset.productId;
+        currentRating = 0;
+        commentInput.value='';
+        imageInput.value='';
+        renderModalStars();
+        updateModalStars();
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      });
+      // Đóng modal
+      closeBtn.addEventListener('click', ()=>{
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      });
+      // Gửi đánh giá
+      submitBtn.addEventListener('click', async ()=>{
+        if (!currentRating) return alert('Vui lòng chọn số sao!');
+        const fd=new FormData();
+        fd.append('orderId', currentOrderId);
+        fd.append('productId', currentProductId);
+        fd.append('rating', currentRating);
+        fd.append('comment', commentInput.value.trim());
+        if (imageInput.files[0]) fd.append('image', imageInput.files[0]);
+        try {
+          const res=await fetch('http://localhost:5000/api/ratings',{
+            method:'POST', body:fd
+          });
+          if(!res.ok) throw new Error(await res.text());
+          alert('Cảm ơn bạn đã đánh giá!');
+          closeBtn.click();
+        } catch(err){
+          console.error(err);
+          alert('Lỗi khi gửi đánh giá: '+err.message);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
